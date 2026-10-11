@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split 
 
 def generate_synthetic_dataset(n_samples: int = 300) -> pd.DataFrame:
     """Generates a synthetic health dataset for demonstration purposes."""
-    np.random.seed(42)
+    np.random.seed(42)   
     data = {
         'Age': np.random.randint(30, 70, n_samples),
         'Blood_Pressure': np.random.randint(110, 180, n_samples),

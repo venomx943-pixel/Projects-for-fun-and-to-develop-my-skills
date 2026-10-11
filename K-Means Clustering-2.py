@@ -36,7 +36,7 @@ user_customer = [30.0, 45.0, 75.0, 2.0]
 
 try:
     cluster_id = secure_customer_segmentation(user_customer, model)
-    print(f"Secure Customer Segmentation Result: Assigned t Clustor ID {cluster_id}")
+    print(f"Secure Customer Segmentation Result: Assigned to Clustor ID {cluster_id}")
 
 except Exception as e:
     print(f"Security/Engineering Alert Detected: {e}")
