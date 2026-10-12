@@ -1,0 +1,76 @@
+import numpy as np
+
+class SimpleVectorStore:
+    def __init__(self):
+        self.documents = []
+        self.vectors = []
+
+    def add_documents(self, docs, vectors):
+        self.documents.extend(docs)
+        self.vectors.extend(vectors)
+        self.vectors = np.array(self.vectors, dtype=float)
+        print(f"[INFO] Successfully added {len(docs)} documents to the vector store.")
+
+    def cosine_similarity(self, vec_a, vec_b):
+        # Compute dot product and magnitudes for cosine similarity
+        dot_product = np.dot(vec_a, vec_b)
+        norm_a = np.linalg.norm(vec_a)
+        norm_b = np.linalg.norm(vec_b)
+        
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return dot_product / (norm_a * norm_b)
+
+    def search(self, query_vector, top_k=2):
+        query_vector = np.array(query_vector, dtype=float)
+        scores = []
+
+        # Step 1: Calculate cosine similarity between query and all stored document vectors
+        for idx, doc_vector in enumerate(self.vectors):
+            sim = self.cosine_similarity(query_vector, doc_vector)
+            scores.append((sim, idx))
+
+        # Step 2: Sort scores in descending order (highest similarity first)
+        scores.sort(key=lambda x: x[0], reverse=True)
+
+        # Step 3: Retrieve top-k relevant documents
+        results = []
+        for sim, idx in scores[:top_k]:
+            results.append({
+                "document": self.documents[idx],
+                "score": float(sim)
+            })
+
+        return results
+
+# --- Testing the Engine ---
+if __name__ == "__main__":
+    # Mock documents database
+    docs_db = [
+        "Python is a high-level programming language used for artificial intelligence and backend systems.",
+        "Cybersecurity involves protecting systems, networks, and programs from digital attacks.",
+        "Prompt injection is a critical vulnerability affecting large language models and AI agents.",
+        "Machine learning algorithms build a model based on sample data in order to make predictions."
+    ]
+
+    # Mock corresponding vector embeddings (e.g., 3-dimensional representation for simplicity)
+    mock_embeddings = [
+        [0.8, 0.2, 0.1],
+        [0.1, 0.9, 0.3],
+        [0.2, 0.8, 0.9],
+        [0.9, 0.3, 0.2]
+    ]
+
+    # Initialize vector store and add documents
+    vector_store = SimpleVectorStore()
+    vector_store.add_documents(docs_db, mock_embeddings)
+
+    # Test query vector (representing a query about AI security and prompt injection)
+    query_vec = [0.2, 0.85, 0.85]
+    
+    # Retrieve top 2 most relevant documents
+    retrieved_results = vector_store.search(query_vec, top_k=2)
+
+    print("\n[RESULT] Retrieved Documents for Query:")
+    for res in retrieved_results:
+        print(f"   - Score: {res['score']:.4f} | Text: {res['document']}")
