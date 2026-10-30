@@ -135,5 +135,5 @@ if __name__ == "__main__":
     print(f"System Robustness Score: {report['robustness_score_percent']}%")
     
     print("\nSample Audit Logs:")
-    for log in report["detailed_logs"][:10]:
+    for log in report["detailed_logs"][:45]:
         print(f"[{log['id']:02d}] Action: {log['action']} (Conf: {log['confidence']}) | Text: {log['text'][:40]}...")
